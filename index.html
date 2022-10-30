@@ -16,15 +16,18 @@
         <button type="button" class="start">Start Game</button>
         <div class="message"></div>
         <form class="popup-form">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name">
-            <label for="symbol">Symbol</label>
-            <label for="X">X</label>
-            <input type="radio" id="X" name="symbol" value="X">
-            <label for="O">O</label>
-            <input type="radio" id="O" name="symbol" value="O">
-            <button type="button" id="confirm" >Confirm</button>
-            <button type="button" id="cancel" >Cancel</button>
+            <div class="pvp">
+                <div>HUMAN VS HUMAN</div>
+                <label for="name">X player Name:</label>
+                <input type="text" id="xname" name="xname">
+                <label for="name">O player Name:</label>
+                <input type="text" id="oname" name="oname">
+            </div>
+            <div class="ai">
+                <div>HUMAN VS AI</div>
+            </div>
+            <button type="button" class="confirm">Confirm</button>
+            <button type="button" class="cancel" >Cancel</button>
         </form>
     </div>
     <div class="gameboard">
