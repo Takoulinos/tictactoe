@@ -36,17 +36,40 @@ const playGame = (() => {
     renderStuff.renderMessage(message);
 
     const playRound = (square) => {
-        gameBoard.board[square] = currentPlayer.getSymbol();
-        renderStuff.renderBoard();
-        (currentPlayer === player1) ? currentPlayer = player2 : currentPlayer = player1;
-        message = `It's ${currentPlayer.getName()}'s turn`;
-        renderStuff.renderMessage(message); 
+        if (gameBoard.board[square] === '') {
+            gameBoard.board[square] = currentPlayer.getSymbol();
+            renderStuff.renderBoard();
+            if (checkWinner(square)) {
+                message = `${currentPlayer.getName()} wins!`;
+            }
+            else {
+                if (gameBoard.board.includes('')) {
+                    (currentPlayer === player1) ? currentPlayer = player2 : currentPlayer = player1;
+                    message = `It's ${currentPlayer.getName()}'s turn`;
+                }
+                else {
+                    message = 'Game over. It\'s a tie'
+                }
+            }
+            renderStuff.renderMessage(message);
+        } 
     }
 
-    const checkWinner = () => {
+    const checkWinner = (index) => {
+        const winningCombinations = [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ]
 
+        return winningCombinations.filter(combination => combination.includes(index)).some(combination => combination.every(index => gameBoard.board[index] === currentPlayer.getSymbol()))
     }
-    
+
     return {playRound}
 })();
 

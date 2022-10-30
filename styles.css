@@ -1,13 +1,28 @@
+body {
+    padding-left: 20%;
+    padding-right: 20%;
+    text-align: center;
+}
+
 .gameboard {
+    font-family: 'Pacifico', cursive;
+    margin: auto;
     width: 30vmax;
     height: 30vmax;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
+    margin: 0 auto;
+    outline: 2px solid white;
+    outline-offset: -2px; 
 }
 
 .square {
     border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
 }
 
 .popup-form {
