@@ -11,25 +11,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="header">
-        <h1>Tic Tac Toe Game</h1>
-        <button type="button" class="start">Start Game</button>
-        <div class="message"></div>
-        <form class="popup-form">
-            <div class="pvp">
-                <div>HUMAN VS HUMAN</div>
-                <label for="name">X player Name:</label>
-                <input type="text" id="xname" name="xname">
-                <label for="name">O player Name:</label>
-                <input type="text" id="oname" name="oname">
-            </div>
-            <div class="ai">
-                <div>HUMAN VS AI</div>
-            </div>
-            <button type="button" class="confirm">Confirm</button>
-            <button type="button" class="cancel" >Cancel</button>
-        </form>
-    </div>
+    
+    <h1>Tic Tac Toe Game</h1>
+    <button type="button" class="start">Start Game</button>
+    <div class="message"></div>
+
+    <div class="gamemode">
+        <div class="buttoncontainer">
+            <button class="active" id="pvpbutton">HUMAN VS HUMAN</button>
+            <button class="" id="aibutton">HUMAN VS AI</button>
+        </div>
+        <div class="tabcontent" id="pvp">
+            <label for="xname">X player Name:</label>
+            <input type="text" id="xname" name="xname">
+            <label for="oname">O player Name:</label>
+            <input type="text" id="oname" name="oname">
+        </div>
+        <div class="tabcontent" id="ai">
+            <label for="pname">Enter your Name:</label>
+            <input type="text" id="pname" name="pname">
+        </div>
+        <button type="button" class="cancel" >Cancel</button>
+        <button type="button" class="confirm">Confirm</button>
+    </div>  
+
     <div class="gameboard">
         <div class="square" data-index="0"></div>
         <div class="square" data-index="1"></div>

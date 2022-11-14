@@ -1,3 +1,8 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
 body {
     padding-left: 20%;
     padding-right: 20%;
@@ -25,22 +30,47 @@ body {
     font-size: 32px;
 }
 
-.popup-form {
-    display: none;
-    width: 60%;
-    height: 40%;
+
+.gamemode {
     position: fixed;
-    top: 6%;
-    left: 18%;
+    display: none;
+    width: 50%;
+    height: 15%;
 }
 
-input {
-    width: 20%;
+.gamemode .buttoncontainer {
+    height: 15%;
+    display: flex;
 }
 
-.pvp {
-    height: 50%;
-    background-color: rgb(127, 127, 179);
+.gamemode .buttoncontainer button {
+    width: 50%;
+    height: 100%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 10px;
+    background-color: #eee;
+}
+
+.gamemode .buttoncontainer button:hover {
+    background-color: #d7d4d4;
+}
+
+.gamemode .tab {
+    height: 85%;
+    background-color: gray;
+    color: white;
+    text-align: center;
+    padding-top: 105px;
+    box-sizing: border-box;
+    font-size: 22px;
+}
+
+.gamemode .tabcontent {
+    height: 100%;
+    background-color: rgba(175, 32, 32, 0.9);
     display: flex;
     flex-direction: column;
     padding-top: 1%;
@@ -49,9 +79,10 @@ input {
     align-items: center;
 }
 
-.ai {
-    height: 50%;
-    background-color: rgb(144, 231, 133);
-    display: flex;
-    flex-direction: column;
+.gamemode .buttoncontainer .active {
+    background-color: rgba(175, 32, 32, 0.9);
+}
+
+.gamemode #ai {
+    display: none;
 }

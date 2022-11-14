@@ -26,10 +26,7 @@ const renderStuff = (() => {
     return {renderBoard, renderMessage}
 })();
 
-    //let player1 = player('Theo', 'X');
-    //let player2 = player('Kat', 'O');
-
-//the logic of the game
+//Module containing the logic of the game
 const playGame = (() => {
     let gameStatus = false;
     let player1;
@@ -93,6 +90,7 @@ const eventsListener = (() => {
     const startButton = document.querySelector('.start');
     const confirmButon = document.querySelector('.confirm')
     const cancelButton = document.querySelector('.cancel');
+    const tabs = document.querySelectorAll('.buttoncontainer button');
 
     squares.forEach((square) =>
         square.addEventListener('click', (e) => {
@@ -100,18 +98,41 @@ const eventsListener = (() => {
         }));
 
     startButton.addEventListener('click', () => {
-        document.querySelector('.popup-form').style.display = 'block';
+        document.querySelector('.gamemode').style.display = 'block';
     })
 
     confirmButon.addEventListener('click', () => {
-        let xplayer = player('asdf', 'X');
-        let oplayer = player('qwer', 'O');
+        let xplayer = player(document.querySelector('#xname').value, 'X');
+        let oplayer = player(document.querySelector('#oname').value, 'O');
         playGame.beginGame(xplayer, oplayer);
-        document.querySelector('.popup-form').style.display = 'none';
+        document.querySelector('.gamemode').style.display = 'none';
+        startButton.textContent = 'Restart Game';
     })
 
     cancelButton.addEventListener('click', () => {
-        document.querySelector('.popup-form').style.display = 'none';
+        document.querySelector('.gamemode').style.display = 'none';
     })
-})();
 
+    tabs.forEach((tab) =>
+        tab.addEventListener('click', (e) => {
+            switchTabs(e);
+        })
+    )
+
+    const switchTabs = (e) => {
+        if (e.target.classList.contains('active')) {
+            return
+        }
+        tabContent = document.querySelectorAll('.tabcontent')
+        for (let i=0; i < tabs.length; i++) {
+            if (tabs[i].classList.contains('active')){
+                tabs[i].classList.remove('active');
+                tabContent[i].style.display = 'none';
+            }
+            else {
+                tabs[i].classList.add('active')
+                tabContent[i].style.display = 'block';
+            }
+        }
+    }
+})();
