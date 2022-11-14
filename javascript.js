@@ -1,6 +1,6 @@
 //An Array containing the content of the gameboard
 const gameMemory = (() => {
-    const board = ['','','','','','','','','']
+    const board = ['','','','','','','','',''];
     const squares = document.querySelectorAll('.square');
     return {board, squares};
 })();
@@ -32,16 +32,22 @@ const playGame = (() => {
     let player1;
     let player2;
     let currentPlayer;
+    let isHuman = false;
     message = `Press the button to begin a game`;
     renderStuff.renderMessage(message);
 
     const beginGame = (xplayer, oplayer) => {
+        gameMemory.board = ['','','','','','','','',''];
+        renderStuff.renderBoard();
         gameStatus = true;
         player1 = xplayer;
         player2 = oplayer;
         currentPlayer = Math.random() < 0.5 ? player1 : player2;
         message = `It's ${currentPlayer.getName()}'s turn`;
         renderStuff.renderMessage(message);
+        if (currentPlayer.getSymbol()==='O' && isHuman===false) {
+            aiturn();
+        }
     }
 
     const playRound = (square) => {
@@ -81,7 +87,18 @@ const playGame = (() => {
         return winningCombinations.filter(combination => combination.includes(index)).some(combination => combination.every(index => gameMemory.board[index] === currentPlayer.getSymbol()))
     }
 
-    return {beginGame, playRound}
+    const aiturn = () => {
+        const possibleChoices = [];
+        for (let i=0; i<gameMemory.board.length; i++) {
+            if (gameMemory.board[i]==='') {
+                possibleChoices.push(i);
+            }
+        }
+        let aichoice = possibleChoices[Math.floor(Math.random()*possibleChoices.length)];
+        setTimeout(playRound, 2000, aichoice);
+    }
+
+    return {beginGame, playRound, isHuman, aiturn}
 })();
 
 //Module containing the listeners for the boxes and buttons.
@@ -95,6 +112,9 @@ const eventsListener = (() => {
     squares.forEach((square) =>
         square.addEventListener('click', (e) => {
             playGame.playRound(parseInt(e.target.dataset.index));
+            if (playGame.isHuman === false) {
+                playGame.aiturn()
+            }
         }));
 
     startButton.addEventListener('click', () => {
@@ -102,9 +122,18 @@ const eventsListener = (() => {
     })
 
     confirmButon.addEventListener('click', () => {
-        let xplayer = player(document.querySelector('#xname').value, 'X');
-        let oplayer = player(document.querySelector('#oname').value, 'O');
-        playGame.beginGame(xplayer, oplayer);
+        if (tabs[0].classList.contains('active')) {
+            let xplayer = player(document.querySelector('#xname').value, 'X');
+            let oplayer = player(document.querySelector('#oname').value, 'O');
+            playGame.isHuman = true;
+            playGame.beginGame(xplayer, oplayer);
+        }
+        else {
+            let xplayer = player(document.querySelector('#pname').value, 'X');
+            let oplayer = player('Computer', 'O');
+            playGame.isHuman = false;
+            playGame.beginGame(xplayer, oplayer);
+        }
         document.querySelector('.gamemode').style.display = 'none';
         startButton.textContent = 'Restart Game';
     })
