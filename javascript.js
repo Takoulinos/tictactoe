@@ -45,18 +45,19 @@ const playGame = (() => {
         currentPlayer = Math.random() < 0.5 ? player1 : player2;
         message = `It's ${currentPlayer.getName()}'s turn`;
         renderStuff.renderMessage(message);
-        if (currentPlayer.getSymbol()==='O' && isHuman===false) {
+        if (currentPlayer.getSymbol()==='O' && currentPlayer.getName()==='Computer' && isHuman===false) {
             aiturn();
         }
     }
 
     const playRound = (square) => {
+       
         if (gameStatus === false || gameMemory.board[square] !== '') {
             return
         }
         gameMemory.board[square] = currentPlayer.getSymbol();
         renderStuff.renderBoard();
-        if (checkWinner(square)) {
+        if (checkWinner(gameMemory.board, currentPlayer.getSymbol())) {
             message = `${currentPlayer.getName()} wins!`;
             gameStatus = false;
         }
@@ -72,7 +73,7 @@ const playGame = (() => {
         renderStuff.renderMessage(message);
     }
 
-    const checkWinner = (index) => {
+    const checkWinner = (board, symbol) => {
         const winningCombinations = [
             [0,1,2],
             [3,4,5],
@@ -84,9 +85,10 @@ const playGame = (() => {
             [2,4,6]
         ]
 
-        return winningCombinations.filter(combination => combination.includes(index)).some(combination => combination.every(index => gameMemory.board[index] === currentPlayer.getSymbol()))
+        return winningCombinations.some(combination => combination.every(index => board[index] === symbol))
     }
 
+    //The computer chooses where to play using this function
     const aiturn = () => {
         const possibleChoices = [];
         for (let i=0; i<gameMemory.board.length; i++) {
@@ -94,11 +96,11 @@ const playGame = (() => {
                 possibleChoices.push(i);
             }
         }
-        let aichoice = possibleChoices[Math.floor(Math.random()*possibleChoices.length)];
-        setTimeout(playRound, 2000, aichoice);
+        let aichoice = minimax(gameMemory.board, 'O', possibleChoices);
+        setTimeout(playRound, 2000, aichoice.index); 
     }
 
-    return {beginGame, playRound, isHuman, aiturn}
+    return {beginGame, playRound, isHuman, aiturn, checkWinner}
 })();
 
 //Module containing the listeners for the boxes and buttons.
@@ -165,3 +167,67 @@ const eventsListener = (() => {
         }
     }
 })();
+
+//minimax algorithm to create an unbeatable AI
+function minimax(currentBoard, symbol, possibleChoices) {
+
+    if (playGame.checkWinner(currentBoard, 'O')) {
+        return {score: 1};
+    }
+    else if (playGame.checkWinner(currentBoard, 'X')) {
+        return {score: -1};
+    }
+    else if (possibleChoices.length === 0) {
+        return {score: 0};
+    }
+
+    const allTests = [];
+
+    for (let i = 0; i<possibleChoices.length; i++) {
+        //we run a test for each available square
+        const currentTest = {};
+        currentTest.index = possibleChoices[i];
+        //each test updates the game board temporarily to check the outcomes
+        currentBoard[possibleChoices[i]] = symbol;
+        //then we recursively run the minimax function each time for the next player with the remaining options
+        let newChoices = possibleChoices.map(x => x);
+        newChoices.splice(i,1);
+        if (symbol==='O') {
+            result = minimax(currentBoard, 'X', newChoices);
+            currentTest.score = result.score;
+        }
+        else {
+            result = minimax(currentBoard, 'O', newChoices);
+            currentTest.score = result.score;
+        }
+
+        //reset the gameboard
+        currentBoard[possibleChoices[i]] = '';
+        //save the result of the test
+        allTests.push(currentTest);
+    }
+
+    let bestPlay;
+
+    //get the index of each player's best play
+    if (symbol==='O') {
+        let bestScore = -Infinity;
+        for (let i=0; i<allTests.length; i++) {
+            if (allTests[i].score > bestScore) {
+                bestScore = allTests[i].score;
+                bestPlay = allTests[i];
+            }
+        }
+    }
+    else {
+        let bestScore = Infinity;
+        for (let i=0; i<allTests.length; i++) {
+            if (allTests[i].score < bestScore) {
+                bestScore = allTests[i].score;
+                bestPlay = allTests[i];
+            }
+        }
+    }
+    
+    return bestPlay
+}
